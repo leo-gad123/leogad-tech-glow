@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Github, ExternalLink, Clock } from "lucide-react";
 import smartLampImage from "@/assets/smart-lamp.png";
+import smartLamp2Image from "@/assets/smart-lamp-2.png";
 
 const Projects = () => {
   const projects = [
@@ -43,7 +44,7 @@ const Projects = () => {
     {
       title: "Smart Lighting System",
       description: "Next-generation intelligent lighting platform with AI-powered automation, mood detection, and seamless integration capabilities.",
-      image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=500&h=300&fit=crop",
+      image: smartLamp2Image,
       technologies: ["AI/ML", "IoT", "React Native", "Cloud Services"],
       githubUrl: "#",
       liveUrl: "#",
