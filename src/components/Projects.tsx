@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Github, ExternalLink, Clock } from "lucide-react";
+import smartLampImage from "@/assets/smart-lamp.png";
 
 const Projects = () => {
   const projects = [
@@ -33,7 +34,7 @@ const Projects = () => {
     {
       title: "IoT Smart Light Control",
       description: "Advanced lighting control system with adaptive brightness, color temperature adjustment, and energy efficiency optimization.",
-      image: "https://images.unsplash.com/photo-1519710164239-da123dc03ef4?w=500&h=300&fit=crop",
+      image: smartLampImage,
       technologies: ["LED Control", "IoT", "Energy Monitoring", "Mobile App"],
       githubUrl: "#",
       liveUrl: "#",
