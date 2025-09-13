@@ -47,14 +47,14 @@ const Contact = () => {
     {
       icon: <Github className="w-5 h-5" />,
       label: "GitHub",
-      link: "#",
-      username: "@hakizimanaleogad"
+      link: "https://github.com/leo-gad",
+      username: "@leo-gad"
     },
     {
       icon: <Linkedin className="w-5 h-5" />,
       label: "LinkedIn",
-      link: "#",
-      username: "hakizimana-leogad"
+      link: "https://linkedin.com/in/hakizimana-leogad",
+      username: "hakizimana leogad"
     },
     {
       icon: <Mail className="w-5 h-5" />,

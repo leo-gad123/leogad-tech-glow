@@ -85,7 +85,9 @@ const Hero = () => {
               <Phone size={24} />
             </a>
             <a
-              href="#"
+              href="https://github.com/leo-gad"
+              target="_blank"
+              rel="noopener noreferrer"
               className="text-muted-foreground hover:text-primary transition-colors duration-fast neon-glow p-3 rounded-full bg-card/50"
             >
               <Github size={24} />
