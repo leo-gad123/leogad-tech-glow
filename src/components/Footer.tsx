@@ -1,4 +1,4 @@
-import { Github, Linkedin, Mail, Phone, MapPin, ArrowUp } from "lucide-react";
+import { Github, Linkedin, Mail, Phone, MapPin, ArrowUp, Instagram } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import logo from "@/assets/logo.png";
 
@@ -17,6 +17,11 @@ const Footer = () => {
       icon: <Linkedin className="w-5 h-5" />,
       href: "https://linkedin.com/in/hakizimana-leogad",
       label: "LinkedIn"
+    },
+    {
+      icon: <Instagram className="w-5 h-5" />,
+      href: "https://instagram.com/1eogad",
+      label: "Instagram"
     },
     {
       icon: <Mail className="w-5 h-5" />,

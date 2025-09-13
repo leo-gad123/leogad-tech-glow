@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Mail, Phone, MapPin, Send, Github, Linkedin, Download } from "lucide-react";
+import { Mail, Phone, MapPin, Send, Github, Linkedin, Download, Instagram } from "lucide-react";
 import { useState } from "react";
 
 const Contact = () => {
@@ -55,6 +55,12 @@ const Contact = () => {
       label: "LinkedIn",
       link: "https://linkedin.com/in/hakizimana-leogad",
       username: "hakizimana leogad"
+    },
+    {
+      icon: <Instagram className="w-5 h-5" />,
+      label: "Instagram",
+      link: "https://instagram.com/1eogad",
+      username: "@1eogad"
     },
     {
       icon: <Mail className="w-5 h-5" />,
