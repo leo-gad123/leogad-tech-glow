@@ -21,7 +21,7 @@ const Hero = () => {
       <div className="container mx-auto px-4 text-center relative z-10">
         <div className="max-w-4xl mx-auto">
           {/* Profile Picture */}
-          <div className="mt-8 mb-8 fade-in">
+          <div className="mt-16 mb-8 fade-in">
             <Avatar className="w-32 h-32 mx-auto mb-6 neon-glow">
               <AvatarImage src={profileImage} alt="Hakizimana Leogad" />
               <AvatarFallback>HL</AvatarFallback>

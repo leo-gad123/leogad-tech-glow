@@ -41,7 +41,7 @@ const About = () => {
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             {/* Bio Content */}
             <div className="space-y-6">
-              <div className="flex items-center space-x-6 mt-4 mb-6">
+              <div className="flex items-center space-x-6 mt-8 mb-6">
                 <Avatar className="w-20 h-20 neon-glow">
                   <AvatarImage src={profileImage} alt="Hakizimana Leogad" />
                   <AvatarFallback>HL</AvatarFallback>
