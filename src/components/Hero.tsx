@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { ArrowDown, Github, Mail, Phone, MapPin, Instagram } from "lucide-react";
+import { ArrowDown, Github, Mail, Phone, MapPin, Instagram, MessageCircle } from "lucide-react";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import profileImage from "@/assets/profile.jpeg";
 
@@ -99,6 +99,13 @@ const Hero = () => {
               className="text-muted-foreground hover:text-primary transition-colors duration-fast neon-glow p-3 rounded-full bg-card/50"
             >
               <Instagram size={24} />
+            </a>
+            <a
+              href="#"
+              className="text-muted-foreground hover:text-primary transition-colors duration-fast neon-glow p-3 rounded-full bg-card/50"
+              title="Discord: leogad HAKIZIMANA"
+            >
+              <MessageCircle size={24} />
             </a>
           </div>
 
