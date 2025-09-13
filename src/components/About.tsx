@@ -1,4 +1,6 @@
 import { Code, Cpu, Lightbulb, Zap } from "lucide-react";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import profileImage from "@/assets/profile.jpeg";
 
 const About = () => {
   const highlights = [
@@ -39,9 +41,15 @@ const About = () => {
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             {/* Bio Content */}
             <div className="space-y-6">
-              <h3 className="text-2xl md:text-3xl font-heading font-semibold text-primary mb-4">
-                Embedded & IoT Systems Developer
-              </h3>
+              <div className="flex items-center space-x-6 mb-6">
+                <Avatar className="w-20 h-20 neon-glow">
+                  <AvatarImage src={profileImage} alt="Hakizimana Leogad" />
+                  <AvatarFallback>HL</AvatarFallback>
+                </Avatar>
+                <h3 className="text-2xl md:text-3xl font-heading font-semibold text-primary">
+                  Embedded & IoT Systems Developer
+                </h3>
+              </div>
               
               <p className="text-lg text-muted-foreground leading-relaxed">
                 I am an Embedded and IoT Systems Developer based in <span className="text-primary font-semibold">Kigali, Rwanda</span>. 

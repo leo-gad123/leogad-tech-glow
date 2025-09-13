@@ -1,5 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { ArrowDown, Github, Mail, Phone, MapPin } from "lucide-react";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import profileImage from "@/assets/profile.jpeg";
 
 const Hero = () => {
   const scrollToSection = (href: string) => {
@@ -18,6 +20,14 @@ const Hero = () => {
 
       <div className="container mx-auto px-4 text-center relative z-10">
         <div className="max-w-4xl mx-auto">
+          {/* Profile Picture */}
+          <div className="mb-8 fade-in">
+            <Avatar className="w-32 h-32 mx-auto mb-6 neon-glow">
+              <AvatarImage src={profileImage} alt="Hakizimana Leogad" />
+              <AvatarFallback>HL</AvatarFallback>
+            </Avatar>
+          </div>
+          
           {/* Main Heading */}
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-heading font-bold mb-6 fade-in">
             <span className="text-gradient">Hakizimana Leogad</span>
