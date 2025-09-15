@@ -1,6 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { Mail, Phone, MapPin, Send, Github, Linkedin, Download, Instagram, MessageCircle } from "lucide-react";
 import { useState } from "react";
+import { useVisitorTracking } from '@/hooks/useVisitorTracking';
+import { useToast } from '@/hooks/use-toast';
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -8,11 +10,37 @@ const Contact = () => {
     email: "",
     message: ""
   });
+  const { trackEmailVisitor } = useVisitorTracking();
+  const { toast } = useToast();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Track email visitor
+    if (formData.email) {
+      const isNewVisitor = await trackEmailVisitor(formData.email);
+      if (isNewVisitor) {
+        toast({
+          title: "Welcome!",
+          description: "Thanks for visiting! I've been notified of your message.",
+        });
+      } else {
+        toast({
+          title: "Message Sent!",
+          description: "Thanks for reaching out again!",
+        });
+      }
+    }
+    
     // Handle form submission here
     console.log("Form submitted:", formData);
+    
+    // Reset form
+    setFormData({
+      name: "",
+      email: "",
+      message: ""
+    });
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
