@@ -130,16 +130,28 @@ const handler = async (req: Request): Promise<Response> => {
       }
     }
 
-    // Get total visitor count
-    const { count: totalVisitors } = await supabase
-      .from("visitors")
-      .select("*", { count: "exact", head: true });
+    // Get visitor statistics using secure function
+    const { data: statsData, error: statsError } = await supabase
+      .rpc('get_visitor_stats');
 
-    // Get unique visitors count
-    const { count: uniqueVisitors } = await supabase
-      .from("visitors")
-      .select("email", { count: "exact", head: true })
-      .not("email", "is", null);
+    if (statsError) {
+      console.error('Error fetching visitor stats:', statsError);
+      return new Response(JSON.stringify({
+        success: true,
+        isNewVisitor,
+        totalVisitors: 0,
+        uniqueVisitors: 0,
+      }), {
+        status: 200,
+        headers: {
+          "Content-Type": "application/json",
+          ...corsHeaders,
+        },
+      });
+    }
+
+    const totalVisitors = statsData?.[0]?.total_visitors || 0;
+    const uniqueVisitors = statsData?.[0]?.unique_visitors || 0;
 
     return new Response(JSON.stringify({
       success: true,

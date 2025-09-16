@@ -52,7 +52,13 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_visitor_stats: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          total_visitors: number
+          unique_visitors: number
+        }[]
+      }
     }
     Enums: {
       [_ in never]: never

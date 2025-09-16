@@ -31,8 +31,12 @@ export const useVisitorTracking = () => {
 
         if (error) {
           console.error('Error tracking visitor:', error);
-        } else {
-          setVisitorStats(data);
+        } else if (data) {
+          setVisitorStats({
+            totalVisitors: data.totalVisitors || 0,
+            uniqueVisitors: data.uniqueVisitors || 0,
+            isNewVisitor: data.isNewVisitor || false,
+          });
         }
       } catch (error) {
         console.error('Error in visitor tracking:', error);
@@ -57,8 +61,12 @@ export const useVisitorTracking = () => {
 
       if (error) {
         console.error('Error tracking email visitor:', error);
-      } else {
-        setVisitorStats(data);
+      } else if (data) {
+        setVisitorStats({
+          totalVisitors: data.totalVisitors || 0,
+          uniqueVisitors: data.uniqueVisitors || 0,
+          isNewVisitor: data.isNewVisitor || false,
+        });
         return data.isNewVisitor;
       }
     } catch (error) {
