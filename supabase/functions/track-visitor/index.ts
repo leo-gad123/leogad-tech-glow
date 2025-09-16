@@ -35,24 +35,21 @@ const handler = async (req: Request): Promise<Response> => {
     let isNewVisitor = false;
 
     if (email) {
-      // Check if visitor with this email exists
-      const { data: existingVisitor } = await supabase
-        .from("visitors")
-        .select("*")
-        .eq("email", email)
-        .maybeSingle();
+      // Check if visitor with this email exists using secure function
+      const { data: visitorInfo } = await supabase
+        .rpc('get_email_visitor_info', { visitor_email: email });
 
-      if (existingVisitor) {
+      if (visitorInfo && visitorInfo.length > 0) {
         // Update existing visitor
         await supabase
           .from("visitors")
           .update({
             last_visit_at: new Date().toISOString(),
-            visit_count: existingVisitor.visit_count + 1,
+            visit_count: visitorInfo[0].visit_count + 1,
             ip_address: clientIP,
             user_agent: userAgent,
           })
-          .eq("email", email);
+          .eq("id", visitorInfo[0].visitor_id);
       } else {
         // Create new visitor record
         const { error } = await supabase
@@ -70,24 +67,20 @@ const handler = async (req: Request): Promise<Response> => {
         }
       }
     } else {
-      // Track anonymous visitor by IP
-      const { data: existingVisitor } = await supabase
-        .from("visitors")
-        .select("*")
-        .eq("ip_address", clientIP)
-        .is("email", null)
-        .maybeSingle();
+      // Track anonymous visitor by IP using secure function
+      const { data: visitorInfo } = await supabase
+        .rpc('get_anonymous_visitor_info', { visitor_ip: clientIP });
 
-      if (existingVisitor) {
+      if (visitorInfo && visitorInfo.length > 0) {
         // Update existing anonymous visitor
         await supabase
           .from("visitors")
           .update({
             last_visit_at: new Date().toISOString(),
-            visit_count: existingVisitor.visit_count + 1,
+            visit_count: visitorInfo[0].visit_count + 1,
             user_agent: userAgent,
           })
-          .eq("id", existingVisitor.id);
+          .eq("id", visitorInfo[0].visitor_id);
       } else {
         // Create new anonymous visitor record
         const { error } = await supabase

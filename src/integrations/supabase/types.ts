@@ -52,6 +52,20 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      get_anonymous_visitor_info: {
+        Args: { visitor_ip: string }
+        Returns: {
+          visit_count: number
+          visitor_id: string
+        }[]
+      }
+      get_email_visitor_info: {
+        Args: { visitor_email: string }
+        Returns: {
+          visit_count: number
+          visitor_id: string
+        }[]
+      }
       get_visitor_stats: {
         Args: Record<PropertyKey, never>
         Returns: {
