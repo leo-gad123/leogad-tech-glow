@@ -1,56 +1,57 @@
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Github, ExternalLink, Clock } from "lucide-react";
-import smartLampImage from "@/assets/smart-lamp.png";
-import smartLamp2Image from "@/assets/smart-lamp-2.png";
+import { supabase } from "@/integrations/supabase/client";
+
+interface Project {
+  id: string;
+  title: string;
+  description: string;
+  image_url: string | null;
+  technologies: string[];
+  github_url: string | null;
+  live_url: string | null;
+  status: string;
+  featured: boolean;
+}
 
 const Projects = () => {
-  const projects = [
-    {
-      title: "Smart Alarm System",
-      description: "An intelligent alarm system with mobile app integration, customizable alerts, and IoT connectivity for enhanced security monitoring.",
-      image: "https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=500&h=300&fit=crop",
-      technologies: ["Arduino", "ESP32", "C++", "Mobile App"],
-      githubUrl: "https://github.com/leo-gad123/Wifi_Controlled_Alarm",
-      liveUrl: "#",
-      status: "completed"
-    },
-    {
-      title: "Home Guardian Control Hub",
-      description: "Complete smart home automation solution with voice control, scheduling, and remote monitoring capabilities for lights, security, and climate control.",
-      image: "https://images.unsplash.com/photo-1518005020951-eccb494ad742?w=500&h=300&fit=crop",
-      technologies: ["IoT", "Python", "ESP32", "Home Assistant", "Security"],
-      githubUrl: "https://github.com/leo-gad/home-guardian-control-hub",
-      liveUrl: "#",
-      status: "completed"
-    },
-    {
-      title: "DHT Environmental Monitor",
-      description: "Real-time environmental data collection system using DHT sensors to monitor temperature, humidity, and air quality with cloud analytics and alerts.",
-      image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=500&h=300&fit=crop",
-      technologies: ["DHT Sensors", "ESP32", "Data Analytics", "Cloud Platform"],
-      githubUrl: "https://github.com/leo-gad123/DHT_project",
-      liveUrl: "#",
-      status: "completed"
-    },
-    {
-      title: "IoT Smart Light Control",
-      description: "Advanced IoT lighting control system with adaptive brightness, color temperature adjustment, and energy efficiency optimization using custom firmware.",
-      image: smartLampImage,
-      technologies: ["LED Control", "IoT", "Firmware", "Energy Monitoring"],
-      githubUrl: "https://github.com/leo-gad123/Iot_System_Firmware",
-      liveUrl: "#",
-      status: "completed"
-    },
-    {
-      title: "Smart Lighting System",
-      description: "Next-generation intelligent lighting platform with AI-powered automation, mood detection, and seamless integration capabilities.",
-      image: smartLamp2Image,
-      technologies: ["AI/ML", "IoT", "React Native", "Cloud Services"],
-      githubUrl: "#",
-      liveUrl: "#",
-      status: "in-progress"
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchProjects();
+  }, []);
+
+  const fetchProjects = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('projects')
+        .select('*')
+        .eq('featured', true)
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      setProjects(data || []);
+    } catch (error) {
+      console.error('Error fetching projects:', error);
+    } finally {
+      setLoading(false);
     }
-  ];
+  };
+
+  if (loading) {
+    return (
+      <section id="projects" className="py-20 relative">
+        <div className="container mx-auto px-4">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
+            <p className="mt-4 text-muted-foreground">Loading projects...</p>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section id="projects" className="py-20 relative">
@@ -78,7 +79,7 @@ const Projects = () => {
                 {/* Project Image */}
                 <div className="relative overflow-hidden">
                   <img
-                    src={project.image}
+                    src={project.image_url || 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=500&h=300&fit=crop'}
                     alt={project.title}
                     className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-slow"
                   />
@@ -123,31 +124,33 @@ const Projects = () => {
 
                   {/* Action Buttons */}
                   <div className="flex space-x-3">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      asChild
-                      className="flex-1 border-primary/50 hover:border-primary hover:bg-primary/10"
-                    >
-                      <a href={project.githubUrl} target="_blank" rel="noopener noreferrer">
-                        <Github size={16} />
-                        Code
-                      </a>
-                    </Button>
-                    
-                    {project.status === "completed" && (
-                      <Button
-                        variant="neon"
-                        size="sm"
-                        asChild
-                        className="flex-1"
-                      >
-                        <a href={project.liveUrl} target="_blank" rel="noopener noreferrer">
-                          <ExternalLink size={16} />
-                          Demo
-                        </a>
-                      </Button>
-                    )}
+                      {project.github_url && (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          asChild
+                          className="flex-1 border-primary/50 hover:border-primary hover:bg-primary/10"
+                        >
+                          <a href={project.github_url} target="_blank" rel="noopener noreferrer">
+                            <Github size={16} />
+                            Code
+                          </a>
+                        </Button>
+                      )}
+                      
+                      {project.status === "completed" && project.live_url && project.live_url !== '#' && (
+                        <Button
+                          variant="neon"
+                          size="sm"
+                          asChild
+                          className="flex-1"
+                        >
+                          <a href={project.live_url} target="_blank" rel="noopener noreferrer">
+                            <ExternalLink size={16} />
+                            Demo
+                          </a>
+                        </Button>
+                      )}
                   </div>
                 </div>
               </div>

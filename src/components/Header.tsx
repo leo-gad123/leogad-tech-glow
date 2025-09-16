@@ -69,7 +69,14 @@ const Header = () => {
           </nav>
 
           {/* CTA Button */}
-          <div className="hidden md:block">
+          <div className="hidden md:flex items-center gap-3">
+            <Button
+              variant="ghost"
+              size="sm"
+              asChild
+            >
+              <a href="/auth">Admin</a>
+            </Button>
             <Button
               variant="neon"
               onClick={() => scrollToSection("#contact")}
@@ -109,6 +116,13 @@ const Header = () => {
                 className="mt-4 w-full"
               >
                 Get In Touch
+              </Button>
+              <Button
+                variant="outline"
+                asChild
+                className="w-full"
+              >
+                <a href="/auth">Admin Login</a>
               </Button>
             </nav>
           </div>
