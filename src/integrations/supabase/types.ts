@@ -172,10 +172,6 @@ export type Database = {
           unique_visitors: number
         }[]
       }
-      is_admin_user: {
-        Args: Record<PropertyKey, never>
-        Returns: boolean
-      }
     }
     Enums: {
       [_ in never]: never
