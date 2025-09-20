@@ -7,7 +7,6 @@ import Services from "@/components/Services";
 import Blog from "@/components/Blog";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
-import { VisitorCounter } from "@/components/VisitorCounter";
 
 const Index = () => {
   return (
@@ -15,9 +14,6 @@ const Index = () => {
       <Header />
       <main>
         <Hero />
-        <div className="fixed bottom-4 right-4 z-10">
-          <VisitorCounter />
-        </div>
         <About />
         <Projects />
         <Skills />
