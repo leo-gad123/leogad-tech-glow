@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
+import { Link } from "react-router-dom";
 import logo from "@/assets/logo.png";
 
 const Header = () => {
@@ -75,7 +76,7 @@ const Header = () => {
               size="sm"
               asChild
             >
-              <a href="/auth">Admin</a>
+              <Link to="/auth">Admin</Link>
             </Button>
             <Button
               variant="neon"
@@ -122,7 +123,7 @@ const Header = () => {
                 asChild
                 className="w-full"
               >
-                <a href="/auth">Admin Login</a>
+                <Link to="/auth">Admin Login</Link>
               </Button>
             </nav>
           </div>
