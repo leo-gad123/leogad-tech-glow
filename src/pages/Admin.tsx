@@ -18,6 +18,7 @@ import {
   User
 } from "lucide-react";
 import { Session, User as SupabaseUser } from '@supabase/supabase-js';
+import ProjectForm from "@/components/admin/ProjectForm";
 
 interface Project {
   id: string;
@@ -55,6 +56,8 @@ const Admin = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<'projects' | 'messages'>('projects');
+  const [showProjectForm, setShowProjectForm] = useState(false);
+  const [editingProject, setEditingProject] = useState<Project | null>(null);
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -189,6 +192,51 @@ const Admin = () => {
     }
   };
 
+  const deleteProject = async (projectId: string) => {
+    if (!confirm('Are you sure you want to delete this project?')) return;
+
+    try {
+      const { error } = await supabase
+        .from('projects')
+        .delete()
+        .eq('id', projectId);
+
+      if (error) throw error;
+      
+      setProjects(projects.filter(p => p.id !== projectId));
+      toast({
+        title: "Success",
+        description: "Project deleted successfully.",
+      });
+    } catch (error: any) {
+      console.error('Error deleting project:', error);
+      toast({
+        title: "Error",
+        description: "Failed to delete project.",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const handleEditProject = (project: Project) => {
+    setEditingProject(project);
+    setShowProjectForm(true);
+  };
+
+  const handleAddProject = () => {
+    setEditingProject(null);
+    setShowProjectForm(true);
+  };
+
+  const handleProjectFormClose = () => {
+    setShowProjectForm(false);
+    setEditingProject(null);
+  };
+
+  const handleProjectSave = () => {
+    fetchProjects();
+  };
+
   const handleSignOut = async () => {
     await supabase.auth.signOut();
     navigate('/');
@@ -292,7 +340,7 @@ const Admin = () => {
           <div>
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-2xl font-heading font-semibold">Projects</h2>
-              <Button className="flex items-center gap-2">
+              <Button onClick={handleAddProject} className="flex items-center gap-2">
                 <Plus size={16} />
                 Add Project
               </Button>
@@ -359,10 +407,19 @@ const Admin = () => {
                       </div>
                       
                       <div className="flex gap-1">
-                        <Button variant="ghost" size="sm">
+                        <Button 
+                          variant="ghost" 
+                          size="sm"
+                          onClick={() => handleEditProject(project)}
+                        >
                           <Edit2 size={14} />
                         </Button>
-                        <Button variant="ghost" size="sm" className="text-destructive hover:text-destructive">
+                        <Button 
+                          variant="ghost" 
+                          size="sm" 
+                          className="text-destructive hover:text-destructive"
+                          onClick={() => deleteProject(project.id)}
+                        >
                           <Trash2 size={14} />
                         </Button>
                       </div>
@@ -456,6 +513,15 @@ const Admin = () => {
           </div>
         )}
       </main>
+
+      {/* Project Form Modal */}
+      {showProjectForm && (
+        <ProjectForm
+          project={editingProject || undefined}
+          onClose={handleProjectFormClose}
+          onSave={handleProjectSave}
+        />
+      )}
     </div>
   );
 };
