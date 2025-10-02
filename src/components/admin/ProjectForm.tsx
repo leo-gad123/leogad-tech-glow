@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { X, Plus } from "lucide-react";
+import { X, Plus, Upload, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 
@@ -41,6 +41,8 @@ const ProjectForm = ({ project, onClose, onSave }: ProjectFormProps) => {
   });
   const [newTech, setNewTech] = useState("");
   const [loading, setLoading] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -113,6 +115,45 @@ const ProjectForm = ({ project, onClose, onSave }: ProjectFormProps) => {
     });
   };
 
+  const uploadImage = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    try {
+      setUploading(true);
+
+      if (!event.target.files || event.target.files.length === 0) {
+        return;
+      }
+
+      const file = event.target.files[0];
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${Math.random()}.${fileExt}`;
+
+      const { error: uploadError, data } = await supabase.storage
+        .from('project-images')
+        .upload(fileName, file);
+
+      if (uploadError) throw uploadError;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('project-images')
+        .getPublicUrl(fileName);
+
+      setFormData({ ...formData, image_url: publicUrl });
+      
+      toast({
+        title: "Success",
+        description: "Image uploaded successfully.",
+      });
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive"
+      });
+    } finally {
+      setUploading(false);
+    }
+  };
+
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
       <Card className="w-full max-w-2xl max-h-[90vh] overflow-y-auto">
@@ -169,13 +210,51 @@ const ProjectForm = ({ project, onClose, onSave }: ProjectFormProps) => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="image_url">Image URL</Label>
-              <Input
-                id="image_url"
-                value={formData.image_url || ""}
-                onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
-                placeholder="https://example.com/image.jpg"
-              />
+              <Label htmlFor="image_url">Project Image</Label>
+              <div className="flex gap-2">
+                <Input
+                  id="image_url"
+                  value={formData.image_url || ""}
+                  onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
+                  placeholder="https://example.com/image.jpg or upload below"
+                />
+              </div>
+              <div className="flex items-center gap-2">
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  onChange={uploadImage}
+                  disabled={uploading}
+                  className="hidden"
+                />
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => fileInputRef.current?.click()}
+                  disabled={uploading}
+                  className="flex items-center gap-2"
+                >
+                  {uploading ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      Uploading...
+                    </>
+                  ) : (
+                    <>
+                      <Upload className="w-4 h-4" />
+                      Upload from PC
+                    </>
+                  )}
+                </Button>
+              </div>
+              {formData.image_url && (
+                <img 
+                  src={formData.image_url} 
+                  alt="Preview" 
+                  className="w-full h-32 object-cover rounded-md mt-2"
+                />
+              )}
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

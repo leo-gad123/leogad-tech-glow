@@ -11,6 +11,7 @@ const Auth = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
+  const [rememberMe, setRememberMe] = useState(true);
   const [loading, setLoading] = useState(false);
   const [session, setSession] = useState<Session | null>(null);
   const { toast } = useToast();
@@ -174,6 +175,21 @@ const Auth = () => {
                 />
               </div>
             </div>
+
+            {isLogin && (
+              <div className="flex items-center">
+                <input
+                  type="checkbox"
+                  id="remember"
+                  checked={rememberMe}
+                  onChange={(e) => setRememberMe(e.target.checked)}
+                  className="h-4 w-4 rounded border-primary/30 text-primary focus:ring-primary"
+                />
+                <label htmlFor="remember" className="ml-2 text-sm text-card-foreground">
+                  Remember me
+                </label>
+              </div>
+            )}
 
             <Button
               type="submit"

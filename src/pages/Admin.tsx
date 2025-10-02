@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Label } from "@/components/ui/label";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { 
@@ -19,6 +20,8 @@ import {
 } from "lucide-react";
 import { Session, User as SupabaseUser } from '@supabase/supabase-js';
 import ProjectForm from "@/components/admin/ProjectForm";
+import { ThemeToggle } from "@/components/ThemeToggle";
+import { ProfilePictureUpload } from "@/components/admin/ProfilePictureUpload";
 
 interface Project {
   id: string;
@@ -46,6 +49,7 @@ interface Profile {
   is_admin: boolean;
   full_name: string | null;
   email: string;
+  avatar_url: string | null;
 }
 
 const Admin = () => {
@@ -55,7 +59,7 @@ const Admin = () => {
   const [projects, setProjects] = useState<Project[]>([]);
   const [messages, setMessages] = useState<Message[]>([]);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<'projects' | 'messages'>('projects');
+  const [activeTab, setActiveTab] = useState<'projects' | 'messages' | 'profile'>('projects');
   const [showProjectForm, setShowProjectForm] = useState(false);
   const [editingProject, setEditingProject] = useState<Project | null>(null);
   const { toast } = useToast();
@@ -98,7 +102,7 @@ const Admin = () => {
     try {
       const { data, error } = await supabase
         .from('profiles')
-        .select('is_admin, full_name, email')
+        .select('is_admin, full_name, email, avatar_url')
         .eq('user_id', user?.id)
         .single();
 
@@ -242,6 +246,10 @@ const Admin = () => {
     navigate('/');
   };
 
+  const handleAvatarUpdate = (url: string) => {
+    setProfile(prev => prev ? { ...prev, avatar_url: url } : null);
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
@@ -278,7 +286,15 @@ const Admin = () => {
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <User className="h-8 w-8 text-primary" />
+              {profile.avatar_url ? (
+                <img
+                  src={profile.avatar_url}
+                  alt="Profile"
+                  className="h-10 w-10 rounded-full object-cover border-2 border-primary"
+                />
+              ) : (
+                <User className="h-8 w-8 text-primary" />
+              )}
               <div>
                 <h1 className="text-xl font-heading font-bold">Admin Dashboard</h1>
                 <p className="text-sm text-muted-foreground">
@@ -288,6 +304,7 @@ const Admin = () => {
             </div>
             
             <div className="flex items-center gap-4">
+              <ThemeToggle />
               <Button
                 variant="outline"
                 onClick={() => navigate('/')}
@@ -331,6 +348,16 @@ const Admin = () => {
               }`}
             >
               Messages ({messages.filter(m => m.status === 'unread').length} unread)
+            </button>
+            <button
+              onClick={() => setActiveTab('profile')}
+              className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors ${
+                activeTab === 'profile'
+                  ? 'bg-primary text-primary-foreground'
+                  : 'text-muted-foreground hover:text-foreground'
+              }`}
+            >
+              Profile
             </button>
           </div>
         </div>
@@ -509,6 +536,51 @@ const Admin = () => {
                   </CardContent>
                 </Card>
               )}
+            </div>
+          </div>
+        )}
+
+        {/* Profile Tab */}
+        {activeTab === 'profile' && (
+          <div>
+            <div className="mb-6">
+              <h2 className="text-2xl font-heading font-semibold">Profile Settings</h2>
+              <p className="text-muted-foreground">Manage your account settings and preferences</p>
+            </div>
+
+            <div className="grid gap-6 max-w-2xl">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Profile Picture</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <ProfilePictureUpload 
+                    userId={user?.id || ''}
+                    currentAvatarUrl={profile?.avatar_url}
+                    onUploadSuccess={handleAvatarUpdate}
+                  />
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle>Account Information</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div>
+                    <Label className="text-sm font-medium">Full Name</Label>
+                    <p className="text-base mt-1">{profile?.full_name || 'Not set'}</p>
+                  </div>
+                  <div>
+                    <Label className="text-sm font-medium">Email</Label>
+                    <p className="text-base mt-1">{profile?.email}</p>
+                  </div>
+                  <div>
+                    <Label className="text-sm font-medium">Role</Label>
+                    <Badge variant="default" className="mt-1">Admin</Badge>
+                  </div>
+                </CardContent>
+              </Card>
             </div>
           </div>
         )}
