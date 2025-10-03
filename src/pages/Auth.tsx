@@ -38,6 +38,14 @@ const Auth = () => {
     return () => subscription.unsubscribe();
   }, [navigate]);
 
+  // Seed admin account once by invoking the edge function
+  useEffect(() => {
+    supabase.functions.invoke('create-admin-user').catch(() => {
+      // silently ignore; function is idempotent and returns early if user exists
+    });
+  }, []);
+
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
