@@ -3,14 +3,12 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { Mail, Lock, User, ArrowLeft } from "lucide-react";
+import { Mail, Lock, ArrowLeft } from "lucide-react";
 import { Session } from '@supabase/supabase-js';
 
 const Auth = () => {
-  const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [fullName, setFullName] = useState("");
   const [rememberMe, setRememberMe] = useState(true);
   const [loading, setLoading] = useState(false);
   const [session, setSession] = useState<Session | null>(null);
@@ -45,39 +43,17 @@ const Auth = () => {
     setLoading(true);
 
     try {
-      if (isLogin) {
-        const { error } = await supabase.auth.signInWithPassword({
-          email,
-          password,
-        });
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
 
-        if (error) throw error;
+      if (error) throw error;
 
-        toast({
-          title: "Success!",
-          description: "You have been logged in successfully.",
-        });
-      } else {
-        const redirectUrl = `${window.location.origin}/`;
-        
-        const { error } = await supabase.auth.signUp({
-          email,
-          password,
-          options: {
-            emailRedirectTo: redirectUrl,
-            data: {
-              full_name: fullName,
-            }
-          }
-        });
-
-        if (error) throw error;
-
-        toast({
-          title: "Account Created!",
-          description: "Please check your email to confirm your account.",
-        });
-      }
+      toast({
+        title: "Success!",
+        description: "You have been logged in successfully.",
+      });
     } catch (error: any) {
       toast({
         title: "Error",
@@ -108,36 +84,14 @@ const Auth = () => {
         <div className="bg-card border border-card-border rounded-lg p-8 shadow-card">
           <div className="text-center mb-8">
             <h1 className="text-3xl font-heading font-bold text-primary">
-              {isLogin ? "Admin Login" : "Create Account"}
+              Admin Login
             </h1>
             <p className="text-muted-foreground mt-2">
-              {isLogin 
-                ? "Sign in to access the admin dashboard" 
-                : "Create an account to get started"
-              }
+              Sign in to access the admin dashboard
             </p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
-            {!isLogin && (
-              <div>
-                <label htmlFor="fullName" className="block text-sm font-medium text-card-foreground mb-2">
-                  Full Name
-                </label>
-                <div className="relative">
-                  <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" size={18} />
-                  <input
-                    type="text"
-                    id="fullName"
-                    value={fullName}
-                    onChange={(e) => setFullName(e.target.value)}
-                    required={!isLogin}
-                    className="w-full pl-10 pr-4 py-3 bg-secondary border border-primary/30 rounded-md text-foreground placeholder-muted-foreground focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/50 transition-colors duration-smooth"
-                    placeholder="Enter your full name"
-                  />
-                </div>
-              </div>
-            )}
 
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-card-foreground mb-2">
@@ -176,20 +130,18 @@ const Auth = () => {
               </div>
             </div>
 
-            {isLogin && (
-              <div className="flex items-center">
-                <input
-                  type="checkbox"
-                  id="remember"
-                  checked={rememberMe}
-                  onChange={(e) => setRememberMe(e.target.checked)}
-                  className="h-4 w-4 rounded border-primary/30 text-primary focus:ring-primary"
-                />
-                <label htmlFor="remember" className="ml-2 text-sm text-card-foreground">
-                  Remember me
-                </label>
-              </div>
-            )}
+            <div className="flex items-center">
+              <input
+                type="checkbox"
+                id="remember"
+                checked={rememberMe}
+                onChange={(e) => setRememberMe(e.target.checked)}
+                className="h-4 w-4 rounded border-primary/30 text-primary focus:ring-primary"
+              />
+              <label htmlFor="remember" className="ml-2 text-sm text-card-foreground">
+                Remember me
+              </label>
+            </div>
 
             <Button
               type="submit"
@@ -198,22 +150,9 @@ const Auth = () => {
               size="lg"
               className="w-full"
             >
-              {loading ? "Loading..." : (isLogin ? "Sign In" : "Create Account")}
+              {loading ? "Loading..." : "Sign In"}
             </Button>
           </form>
-
-          <div className="mt-6 text-center">
-            <button
-              type="button"
-              onClick={() => setIsLogin(!isLogin)}
-              className="text-primary hover:text-primary/80 text-sm transition-colors duration-smooth"
-            >
-              {isLogin 
-                ? "Don't have an account? Sign up" 
-                : "Already have an account? Sign in"
-              }
-            </button>
-          </div>
         </div>
       </div>
     </div>
