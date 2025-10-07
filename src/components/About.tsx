@@ -1,8 +1,27 @@
 import { Code, Cpu, Lightbulb, Zap } from "lucide-react";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import profileImage from "@/assets/profile.jpeg";
+import { useState, useEffect } from "react";
+import { supabase } from "@/integrations/supabase/client";
 
 const About = () => {
+  const [adminAvatarUrl, setAdminAvatarUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchAdminProfile = async () => {
+      const { data } = await supabase
+        .from('profiles')
+        .select('avatar_url')
+        .eq('email', 'hakizimanaleogad@gmail.com')
+        .maybeSingle();
+      
+      if (data?.avatar_url) {
+        setAdminAvatarUrl(data.avatar_url);
+      }
+    };
+
+    fetchAdminProfile();
+  }, []);
   const highlights = [
     {
       icon: <Cpu className="w-6 h-6" />,
@@ -43,7 +62,7 @@ const About = () => {
             <div className="space-y-6">
               <div className="flex items-center space-x-6 mt-8 mb-6">
                 <Avatar className="w-20 h-20 neon-glow">
-                  <AvatarImage src={profileImage} alt="Hakizimana Leogad" />
+                  <AvatarImage src={adminAvatarUrl || profileImage} alt="Hakizimana Leogad" />
                   <AvatarFallback>HL</AvatarFallback>
                 </Avatar>
                 <h3 className="text-2xl md:text-3xl font-heading font-semibold text-primary">

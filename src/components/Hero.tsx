@@ -2,8 +2,27 @@ import { Button } from "@/components/ui/button";
 import { ArrowDown, Github, Mail, Phone, MapPin, Instagram, MessageCircle } from "lucide-react";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import profileImage from "@/assets/profile.jpeg";
+import { useState, useEffect } from "react";
+import { supabase } from "@/integrations/supabase/client";
 
 const Hero = () => {
+  const [adminAvatarUrl, setAdminAvatarUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchAdminProfile = async () => {
+      const { data } = await supabase
+        .from('profiles')
+        .select('avatar_url')
+        .eq('email', 'hakizimanaleogad@gmail.com')
+        .maybeSingle();
+      
+      if (data?.avatar_url) {
+        setAdminAvatarUrl(data.avatar_url);
+      }
+    };
+
+    fetchAdminProfile();
+  }, []);
   const scrollToSection = (href: string) => {
     const element = document.querySelector(href);
     if (element) {
@@ -23,7 +42,7 @@ const Hero = () => {
           {/* Profile Picture */}
           <div className="mt-16 mb-8 fade-in">
             <Avatar className="w-32 h-32 mx-auto mb-6 neon-glow">
-              <AvatarImage src={profileImage} alt="Hakizimana Leogad" />
+              <AvatarImage src={adminAvatarUrl || profileImage} alt="Hakizimana Leogad" />
               <AvatarFallback>HL</AvatarFallback>
             </Avatar>
           </div>

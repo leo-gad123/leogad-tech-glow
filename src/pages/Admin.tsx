@@ -156,6 +156,31 @@ const Admin = () => {
     }
   };
 
+  const deleteMessage = async (messageId: string) => {
+    if (!confirm('Are you sure you want to delete this message?')) return;
+
+    try {
+      const { error } = await supabase
+        .from('messages')
+        .delete()
+        .eq('id', messageId);
+
+      if (error) throw error;
+
+      setMessages(messages.filter(m => m.id !== messageId));
+      toast({
+        title: "Success",
+        description: "Message deleted successfully",
+      });
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
+  };
+
   const markMessageAsRead = async (messageId: string) => {
     try {
       const { error } = await supabase
@@ -341,15 +366,24 @@ const Admin = () => {
                           {message.email}
                         </CardDescription>
                       </div>
-                      {message.status === 'unread' && (
+                      <div className="flex gap-2">
+                        {message.status === 'unread' && (
+                          <Button 
+                            variant="outline" 
+                            size="sm" 
+                            onClick={() => markMessageAsRead(message.id)}
+                          >
+                            Mark as Read
+                          </Button>
+                        )}
                         <Button 
-                          variant="outline" 
+                          variant="destructive" 
                           size="sm" 
-                          onClick={() => markMessageAsRead(message.id)}
+                          onClick={() => deleteMessage(message.id)}
                         >
-                          Mark as Read
+                          <Trash2 size={16} />
                         </Button>
-                      )}
+                      </div>
                     </div>
                   </CardHeader>
                   <CardContent>
