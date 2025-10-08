@@ -14,6 +14,45 @@ export type Database = {
   }
   public: {
     Tables: {
+      certifications: {
+        Row: {
+          created_at: string
+          credential_id: string | null
+          credential_url: string | null
+          description: string | null
+          id: string
+          image_url: string | null
+          issue_date: string
+          issuer: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          credential_id?: string | null
+          credential_url?: string | null
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          issue_date: string
+          issuer: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          credential_id?: string | null
+          credential_url?: string | null
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          issue_date?: string
+          issuer?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       messages: {
         Row: {
           created_at: string | null
@@ -44,6 +83,7 @@ export type Database = {
       profiles: {
         Row: {
           avatar_url: string | null
+          bio: string | null
           created_at: string | null
           email: string
           full_name: string | null
@@ -54,6 +94,7 @@ export type Database = {
         }
         Insert: {
           avatar_url?: string | null
+          bio?: string | null
           created_at?: string | null
           email: string
           full_name?: string | null
@@ -64,6 +105,7 @@ export type Database = {
         }
         Update: {
           avatar_url?: string | null
+          bio?: string | null
           created_at?: string | null
           email?: string
           full_name?: string | null

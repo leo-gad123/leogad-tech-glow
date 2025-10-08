@@ -6,17 +6,21 @@ import { supabase } from "@/integrations/supabase/client";
 
 const About = () => {
   const [adminAvatarUrl, setAdminAvatarUrl] = useState<string | null>(null);
+  const [adminBio, setAdminBio] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchAdminProfile = async () => {
       const { data } = await supabase
         .from('profiles')
-        .select('avatar_url')
+        .select('avatar_url, bio')
         .eq('email', 'hakizimanaleogad@gmail.com')
         .maybeSingle();
       
       if (data?.avatar_url) {
         setAdminAvatarUrl(data.avatar_url);
+      }
+      if (data?.bio) {
+        setAdminBio(data.bio);
       }
     };
 
@@ -70,21 +74,29 @@ const About = () => {
                 </h3>
               </div>
               
-              <p className="text-lg text-muted-foreground leading-relaxed">
-                I am an Embedded and IoT Systems Developer based in <span className="text-primary font-semibold">Kigali, Rwanda</span>. 
-                I specialize in designing smart, efficient, and scalable IoT solutions that integrate hardware and software seamlessly.
-              </p>
-              
-              <p className="text-lg text-muted-foreground leading-relaxed">
-                My passion lies in creating innovative solutions that bridge the physical and digital worlds. 
-                From smart home automation to environmental monitoring systems, I focus on building technology 
-                that makes a real difference in people's lives.
-              </p>
-              
-              <p className="text-lg text-muted-foreground leading-relaxed">
-                My goal is to contribute to the future of connected systems through practical innovation, 
-                hands-on development, and a commitment to excellence in every project I undertake.
-              </p>
+              {adminBio ? (
+                <p className="text-lg text-muted-foreground leading-relaxed whitespace-pre-line">
+                  {adminBio}
+                </p>
+              ) : (
+                <>
+                  <p className="text-lg text-muted-foreground leading-relaxed">
+                    I am an Embedded and IoT Systems Developer based in <span className="text-primary font-semibold">Kigali, Rwanda</span>. 
+                    I specialize in designing smart, efficient, and scalable IoT solutions that integrate hardware and software seamlessly.
+                  </p>
+                  
+                  <p className="text-lg text-muted-foreground leading-relaxed">
+                    My passion lies in creating innovative solutions that bridge the physical and digital worlds. 
+                    From smart home automation to environmental monitoring systems, I focus on building technology 
+                    that makes a real difference in people's lives.
+                  </p>
+                  
+                  <p className="text-lg text-muted-foreground leading-relaxed">
+                    My goal is to contribute to the future of connected systems through practical innovation, 
+                    hands-on development, and a commitment to excellence in every project I undertake.
+                  </p>
+                </>
+              )}
             </div>
 
             {/* Highlights Grid */}

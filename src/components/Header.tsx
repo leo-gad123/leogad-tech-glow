@@ -74,13 +74,6 @@ const Header = () => {
           <div className="hidden md:flex items-center gap-3">
             <ThemeToggle />
             <Button
-              variant="ghost"
-              size="sm"
-              asChild
-            >
-              <Link to="/auth">Admin</Link>
-            </Button>
-            <Button
               variant="neon"
               onClick={() => scrollToSection("#contact")}
               className="neon-glow"
@@ -119,13 +112,6 @@ const Header = () => {
                 className="mt-4 w-full"
               >
                 Get In Touch
-              </Button>
-              <Button
-                variant="outline"
-                asChild
-                className="w-full"
-              >
-                <Link to="/auth">Admin Login</Link>
               </Button>
             </nav>
           </div>
