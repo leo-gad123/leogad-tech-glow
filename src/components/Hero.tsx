@@ -1,33 +1,14 @@
 import { Button } from "@/components/ui/button";
-import { ArrowDown, Github, Mail, Phone, MapPin, Instagram, MessageCircle, Camera } from "lucide-react";
+import { ArrowDown, Github, Mail, Phone, MapPin, Instagram, MessageCircle } from "lucide-react";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import profileImage from "@/assets/profile.jpeg";
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import ProfilePictureUpload from "@/components/admin/ProfilePictureUpload";
 
 const Hero = () => {
   const [adminAvatarUrl, setAdminAvatarUrl] = useState<string | null>(null);
-  const [isAdmin, setIsAdmin] = useState(false);
-  const [userId, setUserId] = useState<string | null>(null);
-  const [showUploadDialog, setShowUploadDialog] = useState(false);
 
   useEffect(() => {
-    const checkAuth = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session?.user) {
-        const { data: profile } = await supabase
-          .from('profiles')
-          .select('is_admin')
-          .eq('user_id', session.user.id)
-          .maybeSingle();
-        
-        setIsAdmin(profile?.is_admin || false);
-        setUserId(session.user.id);
-      }
-    };
-
     const fetchAdminProfile = async () => {
       const { data } = await supabase
         .from('profiles')
@@ -40,7 +21,6 @@ const Hero = () => {
       }
     };
 
-    checkAuth();
     fetchAdminProfile();
   }, []);
   const scrollToSection = (href: string) => {
@@ -61,21 +41,10 @@ const Hero = () => {
         <div className="max-w-4xl mx-auto">
           {/* Profile Picture */}
           <div className="mt-16 mb-8 fade-in">
-            <div className="relative inline-block">
-              <Avatar className="w-32 h-32 mx-auto mb-6 neon-glow">
-                <AvatarImage src={adminAvatarUrl || profileImage} alt="Hakizimana Leogad" />
-                <AvatarFallback>HL</AvatarFallback>
-              </Avatar>
-              {isAdmin && (
-                <button
-                  onClick={() => setShowUploadDialog(true)}
-                  className="absolute bottom-6 right-0 p-2 bg-primary rounded-full hover:bg-primary/80 transition-colors neon-glow"
-                  title="Change profile picture"
-                >
-                  <Camera size={16} />
-                </button>
-              )}
-            </div>
+            <Avatar className="w-32 h-32 mx-auto mb-6 neon-glow">
+              <AvatarImage src={adminAvatarUrl || profileImage} alt="Hakizimana Leogad" />
+              <AvatarFallback>HL</AvatarFallback>
+            </Avatar>
           </div>
           
           {/* Main Heading */}
@@ -170,25 +139,6 @@ const Hero = () => {
           </div>
         </div>
       </div>
-
-      {/* Profile Picture Upload Dialog */}
-      <Dialog open={showUploadDialog} onOpenChange={setShowUploadDialog}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Update Profile Picture</DialogTitle>
-          </DialogHeader>
-          {userId && (
-            <ProfilePictureUpload
-              userId={userId}
-              currentAvatarUrl={adminAvatarUrl}
-              onUploadComplete={(url) => {
-                setAdminAvatarUrl(url);
-                setShowUploadDialog(false);
-              }}
-            />
-          )}
-        </DialogContent>
-      </Dialog>
     </section>
   );
 };
