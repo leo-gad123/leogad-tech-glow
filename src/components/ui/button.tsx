@@ -9,15 +9,17 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground hover:bg-primary/90",
+        default: "bg-primary text-primary-foreground hover:bg-primary/90 shadow-neon",
         destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/90",
-        outline: "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
-        secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
-        ghost: "hover:bg-accent hover:text-accent-foreground",
+        outline: "border border-primary/30 bg-background/50 backdrop-blur-sm hover:bg-primary/10 hover:border-primary hover:shadow-neon text-foreground",
+        secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80 shadow-neon",
+        ghost: "hover:bg-accent/10 hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline",
-        neon: "bg-primary text-primary-foreground shadow-neon hover:shadow-neon-strong hover:bg-primary-glow border border-primary/50 font-semibold",
-        hero: "bg-gradient-neon text-primary-foreground shadow-neon hover:shadow-neon-strong hover:scale-105 transform transition-all duration-smooth font-bold",
-        tech: "bg-card border border-card-border text-card-foreground shadow-card hover:border-primary hover:shadow-neon backdrop-blur-sm",
+        neon: "bg-gradient-neon text-primary-foreground shadow-neon hover:shadow-neon-strong hover:scale-105 border border-neon-cyan/50 font-semibold transform transition-all",
+        hero: "bg-gradient-cyber text-white shadow-neon-strong hover:shadow-purple hover:scale-110 transform transition-all duration-smooth font-bold animate-glow-pulse",
+        tech: "bg-card/40 backdrop-blur-md border border-card-border text-card-foreground shadow-card hover:border-neon-blue hover:shadow-neon hover:bg-card/60",
+        cyber: "bg-gradient-purple text-white shadow-purple hover:shadow-neon-strong hover:scale-105 border border-neon-purple/50 font-semibold transform transition-all",
+        glass: "bg-card/20 backdrop-blur-lg border border-neon-blue/30 text-foreground hover:border-neon-cyan hover:bg-card/30 shadow-neon",
       },
       size: {
         default: "h-10 px-4 py-2",
