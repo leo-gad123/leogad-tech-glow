@@ -341,4 +341,16 @@
       opacity: 0.6;
     }
   }
+  
+  /* Shimmer Animation for Progress Bars */
+  @keyframes shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+  }
+  
+  /* Scanline Effect */
+  @keyframes scanline {
+    0% { transform: translateY(-100%); }
+    100% { transform: translateY(100%); }
+  }
 }

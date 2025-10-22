@@ -92,14 +92,15 @@ const Skills = () => {
             {skillCategories.map((category, index) => (
               <div
                 key={index}
-                className="bg-card border border-card-border rounded-lg p-6 shadow-card hover:shadow-neon transition-all duration-smooth hover:border-primary/50 group"
+                className="glass-morph rounded-lg p-6 hover:shadow-neon hover:shadow-purple transition-all duration-500 hover:border-neon-blue hover:-translate-y-2 hover:scale-[1.02] transform group animate-fade-in-up"
+                style={{ animationDelay: `${index * 0.1}s` }}
               >
                 {/* Category Header */}
                 <div className="flex items-center space-x-3 mb-6">
-                  <div className="text-primary group-hover:scale-110 transition-transform duration-smooth">
+                  <div className="text-primary group-hover:scale-125 group-hover:rotate-12 transition-all duration-300 pulse-icon">
                     {category.icon}
                   </div>
-                  <h3 className="text-lg font-heading font-semibold text-card-foreground">
+                  <h3 className="text-lg font-heading font-semibold text-card-foreground group-hover:text-gradient-cyber transition-all duration-300">
                     {category.title}
                   </h3>
                 </div>
@@ -116,11 +117,13 @@ const Skills = () => {
                           {skill.level}%
                         </span>
                       </div>
-                      <div className="h-2 bg-secondary rounded-full overflow-hidden">
+                      <div className="h-2 bg-secondary rounded-full overflow-hidden relative">
                         <div
-                          className="h-full bg-gradient-neon rounded-full transition-all duration-slow delay-200"
+                          className="h-full bg-gradient-cyber rounded-full transition-all duration-slow delay-200 shadow-neon relative overflow-hidden"
                           style={{ width: `${skill.level}%` }}
-                        ></div>
+                        >
+                          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-[shimmer_2s_infinite]" style={{ transform: 'translateX(-100%)' }}></div>
+                        </div>
                       </div>
                     </div>
                   ))}
@@ -140,15 +143,16 @@ const Skills = () => {
               ].map((tech, index) => (
                 <div
                   key={index}
-                  className="p-4 bg-card border border-card-border rounded-lg shadow-card hover:shadow-neon transition-all duration-smooth hover:border-primary/50 hover:scale-110 group"
+                  className="p-4 glass-morph rounded-lg hover:shadow-neon hover:shadow-purple transition-all duration-300 hover:border-neon-cyan hover:scale-125 hover:-translate-y-2 transform group cursor-pointer animate-scale-in"
+                  style={{ animationDelay: `${index * 0.05}s` }}
                 >
                   <div className="text-center">
-                    <div className="w-12 h-12 mx-auto mb-2 bg-gradient-neon rounded-lg flex items-center justify-center">
-                      <span className="text-xs font-bold text-primary-foreground">
+                    <div className="w-12 h-12 mx-auto mb-2 bg-gradient-cyber rounded-lg flex items-center justify-center group-hover:rotate-12 transition-transform duration-300 shadow-neon">
+                      <span className="text-xs font-bold text-white">
                         {tech.slice(0, 2).toUpperCase()}
                       </span>
                     </div>
-                    <span className="text-xs text-muted-foreground group-hover:text-primary transition-colors duration-smooth">
+                    <span className="text-xs text-muted-foreground group-hover:text-gradient-cyber transition-all duration-300">
                       {tech}
                     </span>
                   </div>

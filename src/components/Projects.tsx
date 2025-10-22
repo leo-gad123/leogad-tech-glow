@@ -74,7 +74,8 @@ const Projects = () => {
             {projects.map((project, index) => (
               <div
                 key={index}
-                className="group bg-card border border-card-border rounded-lg overflow-hidden shadow-card hover:shadow-neon transition-all duration-smooth hover:border-primary/50 hover:-translate-y-2"
+                className="group glass-morph rounded-lg overflow-hidden hover:shadow-neon hover:shadow-purple transition-all duration-500 hover:border-neon-blue hover:-translate-y-3 hover:scale-[1.02] transform animate-fade-in-up"
+                style={{ animationDelay: `${index * 0.1}s` }}
               >
                 {/* Project Image */}
                 <div className="relative overflow-hidden">
@@ -102,7 +103,7 @@ const Projects = () => {
 
                 {/* Project Content */}
                 <div className="p-6">
-                  <h3 className="text-xl font-heading font-semibold mb-3 text-card-foreground group-hover:text-primary transition-colors duration-smooth">
+                  <h3 className="text-xl font-heading font-semibold mb-3 text-card-foreground group-hover:text-gradient-cyber transition-all duration-300">
                     {project.title}
                   </h3>
                   
@@ -115,7 +116,7 @@ const Projects = () => {
                     {project.technologies.map((tech, techIndex) => (
                       <span
                         key={techIndex}
-                        className="px-3 py-1 bg-primary/10 text-primary text-xs rounded-full border border-primary/20"
+                        className="px-3 py-1 bg-primary/10 text-primary text-xs rounded-full border border-primary/30 hover:border-neon-cyan hover:shadow-neon hover:scale-105 transition-all duration-300 cursor-default"
                       >
                         {tech}
                       </span>
@@ -126,10 +127,10 @@ const Projects = () => {
                   <div className="flex space-x-3">
                       {project.github_url && (
                         <Button
-                          variant="outline"
+                          variant="glass"
                           size="sm"
                           asChild
-                          className="flex-1 border-primary/50 hover:border-primary hover:bg-primary/10"
+                          className="flex-1 hover:scale-105 transform transition-all"
                         >
                           <a href={project.github_url} target="_blank" rel="noopener noreferrer">
                             <Github size={16} />
@@ -140,10 +141,10 @@ const Projects = () => {
                       
                       {project.status === "completed" && project.live_url && project.live_url !== '#' && (
                         <Button
-                          variant="neon"
+                          variant="cyber"
                           size="sm"
                           asChild
-                          className="flex-1"
+                          className="flex-1 hover:scale-105 transform transition-all"
                         >
                           <a href={project.live_url} target="_blank" rel="noopener noreferrer">
                             <ExternalLink size={16} />

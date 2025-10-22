@@ -102,18 +102,19 @@ const Services = () => {
             {services.map((service, index) => (
               <div
                 key={index}
-                className="bg-card border border-card-border rounded-lg p-8 shadow-card hover:shadow-neon transition-all duration-smooth hover:border-primary/50 group"
+                className="glass-morph rounded-lg p-8 hover:shadow-neon hover:shadow-purple transition-all duration-500 hover:border-neon-blue hover:-translate-y-3 hover:scale-[1.02] transform group animate-fade-in-up"
+                style={{ animationDelay: `${index * 0.1}s` }}
               >
                 {/* Service Header */}
                 <div className="flex items-center space-x-4 mb-6">
-                  <div className="p-3 bg-primary/10 rounded-lg text-primary group-hover:scale-110 transition-transform duration-smooth">
+                  <div className="p-3 bg-gradient-cyber rounded-lg text-white group-hover:scale-125 group-hover:rotate-12 transition-all duration-300 shadow-neon">
                     {service.icon}
                   </div>
                   <div>
-                    <h3 className="text-xl font-heading font-semibold text-card-foreground">
+                    <h3 className="text-xl font-heading font-semibold text-card-foreground group-hover:text-gradient-cyber transition-all duration-300">
                       {service.title}
                     </h3>
-                    <p className="text-primary font-semibold text-sm">
+                    <p className="text-primary font-semibold text-sm drop-shadow-[0_0_8px_rgba(0,198,255,0.5)]">
                       {service.pricing}
                     </p>
                   </div>
@@ -136,11 +137,11 @@ const Services = () => {
 
                 {/* CTA Button */}
                 <Button
-                  variant="outline"
-                  className="w-full border-primary/50 hover:border-primary hover:bg-primary/10 group"
+                  variant="glass"
+                  className="w-full group hover:scale-105 transform transition-all duration-300"
                 >
                   <span>Get Started</span>
-                  <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform duration-smooth" />
+                  <ArrowRight size={16} className="group-hover:translate-x-2 transition-transform duration-300" />
                 </Button>
               </div>
             ))}
@@ -161,11 +162,11 @@ const Services = () => {
               {process.map((item, index) => (
                 <div key={index} className="text-center group">
                   <div className="relative mb-4">
-                    <div className="w-16 h-16 mx-auto bg-gradient-neon rounded-full flex items-center justify-center text-primary-foreground font-bold text-lg shadow-neon group-hover:shadow-neon-strong transition-all duration-smooth">
+                    <div className="w-16 h-16 mx-auto bg-gradient-cyber rounded-full flex items-center justify-center text-white font-bold text-lg shadow-neon group-hover:shadow-purple group-hover:scale-125 group-hover:rotate-12 transition-all duration-300 animate-glow-pulse">
                       {item.step}
                     </div>
                     {index < process.length - 1 && (
-                      <div className="hidden md:block absolute top-8 left-full w-full h-0.5 bg-gradient-to-r from-primary to-primary/30 -translate-x-8"></div>
+                      <div className="hidden md:block absolute top-8 left-full w-full h-0.5 bg-gradient-cyber -translate-x-8"></div>
                     )}
                   </div>
                   <h4 className="font-heading font-semibold mb-2 text-card-foreground">
@@ -189,10 +190,10 @@ const Services = () => {
               and project estimate tailored to your specific requirements.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button variant="neon" size="lg" className="px-8">
+              <Button variant="hero" size="lg" className="px-8 hover:scale-110 transform transition-all duration-300">
                 Schedule Free Consultation
               </Button>
-              <Button variant="outline" size="lg" className="px-8 border-primary/50 hover:border-primary">
+              <Button variant="glass" size="lg" className="px-8 hover:scale-105 transform transition-all duration-300">
                 View Portfolio
               </Button>
             </div>

@@ -8,15 +8,17 @@ import Certifications from "@/components/Certifications";
 import Blog from "@/components/Blog";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
+import TechBackground from "@/components/TechBackground";
 import { VisitorCounter } from "@/components/VisitorCounter";
 
 const Index = () => {
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="min-h-screen bg-background text-foreground relative">
+      <TechBackground />
       <Header />
-      <main>
+      <main className="relative z-10">
         <Hero />
-        <div className="fixed bottom-4 right-4 z-10">
+        <div className="fixed bottom-4 right-4 z-50">
           <VisitorCounter />
         </div>
         <About />
