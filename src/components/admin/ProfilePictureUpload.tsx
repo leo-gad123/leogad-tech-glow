@@ -32,7 +32,7 @@ const ProfilePictureUpload = ({ userId, currentAvatarUrl, onUploadComplete }: Pr
     try {
       const fileExt = file.name.split('.').pop();
       const fileName = `${userId}-${Math.random()}.${fileExt}`;
-      const filePath = `${fileName}`;
+      const filePath = `${userId}/${fileName}`;
 
       const { error: uploadError } = await supabase.storage
         .from('profile-pictures')
