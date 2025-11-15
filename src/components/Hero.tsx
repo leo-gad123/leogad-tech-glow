@@ -1,7 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { ArrowDown, Github, Mail, Phone, MapPin, Instagram, MessageCircle } from "lucide-react";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import profileImage from "@/assets/profile.jpeg";
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -53,7 +52,7 @@ const Hero = () => {
           <div className="mt-16 mb-8 fade-in relative">
             <div className="absolute inset-0 bg-gradient-cyber rounded-full blur-2xl opacity-30 animate-glow-pulse" style={{ width: '160px', height: '160px', margin: 'auto' }}></div>
             <Avatar className="w-32 h-32 mx-auto mb-6 neon-glow relative z-10 border-2 border-neon-blue/50 animate-border-flow">
-              <AvatarImage src={adminAvatarUrl || profileImage} alt="Hakizimana Leogad" />
+              {adminAvatarUrl && <AvatarImage src={adminAvatarUrl} alt="Hakizimana Leogad" />}
               <AvatarFallback>HL</AvatarFallback>
             </Avatar>
           </div>
