@@ -10,6 +10,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { LogOut, Plus, Pencil, Trash2, Mail, User as UserIcon, Award } from "lucide-react";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { ThemeCustomizer } from "@/components/ThemeCustomizer";
 import { Badge } from "@/components/ui/badge";
 import { Session, User } from '@supabase/supabase-js';
 import ProjectForm from "@/components/admin/ProjectForm";
@@ -391,6 +392,7 @@ const Admin = () => {
               <UserIcon size={20} className="text-muted-foreground" />
               <span className="text-sm text-card-foreground">{profile.email}</span>
             </div>
+            <ThemeCustomizer isAdmin={true} />
             <ThemeToggle />
             <Button variant="outline" size="sm" onClick={handleSignOut}>
               <LogOut size={16} className="mr-2" />

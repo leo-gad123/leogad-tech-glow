@@ -53,7 +53,7 @@ export function ThemeCustomizer({ isAdmin = false }: ThemeCustomizerProps) {
         .maybeSingle();
 
       if (data?.theme_colors) {
-        const savedColors = data.theme_colors as ThemeColors;
+        const savedColors = JSON.parse(JSON.stringify(data.theme_colors)) as ThemeColors;
         setColors(savedColors);
         applyTheme(savedColors);
       }
@@ -93,7 +93,7 @@ export function ThemeCustomizer({ isAdmin = false }: ThemeCustomizerProps) {
     try {
       const { error } = await supabase
         .from('profiles')
-        .update({ theme_colors: colors })
+        .update({ theme_colors: JSON.parse(JSON.stringify(colors)) })
         .eq('email', 'hakizimanaleogad@gmail.com');
 
       if (error) throw error;
