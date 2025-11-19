@@ -232,7 +232,7 @@ const Contact = () => {
                     value={formData.name}
                     onChange={handleChange}
                     required
-                    className="w-full px-4 py-3 bg-secondary border border-primary/30 rounded-md text-foreground placeholder-muted-foreground focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/50 transition-colors duration-smooth"
+                    className="w-full px-4 py-3 bg-secondary border border-primary/30 rounded-md text-foreground placeholder-white/70 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/50 transition-colors duration-smooth"
                     placeholder="Enter your full name"
                   />
                 </div>
@@ -248,7 +248,7 @@ const Contact = () => {
                     value={formData.email}
                     onChange={handleChange}
                     required
-                    className="w-full px-4 py-3 bg-secondary border border-primary/30 rounded-md text-foreground placeholder-muted-foreground focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/50 transition-colors duration-smooth"
+                    className="w-full px-4 py-3 bg-secondary border border-primary/30 rounded-md text-foreground placeholder-white/70 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/50 transition-colors duration-smooth"
                     placeholder="your.email@example.com"
                   />
                 </div>
@@ -264,7 +264,7 @@ const Contact = () => {
                     onChange={handleChange}
                     required
                     rows={6}
-                    className="w-full px-4 py-3 bg-secondary border border-primary/30 rounded-md text-foreground placeholder-muted-foreground focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/50 transition-colors duration-smooth resize-none"
+                    className="w-full px-4 py-3 bg-secondary border border-primary/30 rounded-md text-foreground placeholder-white/70 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/50 transition-colors duration-smooth resize-none"
                     placeholder="Tell me about your project, requirements, timeline, and any specific questions you have..."
                   />
                 </div>
