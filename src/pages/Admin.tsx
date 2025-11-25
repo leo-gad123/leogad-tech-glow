@@ -16,6 +16,7 @@ import ProjectForm from "@/components/admin/ProjectForm";
 import ProfilePictureUpload from "@/components/admin/ProfilePictureUpload";
 import CertificationForm from "@/components/admin/CertificationForm";
 import { AnnouncementForm } from "@/components/admin/AnnouncementForm";
+import { AdvertisementForm } from "@/components/admin/AdvertisementForm";
 
 interface Project {
   id: string;
@@ -60,6 +61,19 @@ interface Announcement {
   created_at: string;
 }
 
+interface Advertisement {
+  id: string;
+  title: string;
+  description: string;
+  image_url?: string;
+  link_url?: string;
+  button_text?: string;
+  placement: string;
+  is_active: boolean;
+  display_order: number;
+  created_at: string;
+}
+
 interface Profile {
   id: string;
   user_id: string;
@@ -78,6 +92,7 @@ const Admin = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [certifications, setCertifications] = useState<Certification[]>([]);
   const [announcements, setAnnouncements] = useState<Announcement[]>([]);
+  const [advertisements, setAdvertisements] = useState<Advertisement[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("projects");
   const [showProjectForm, setShowProjectForm] = useState(false);
@@ -86,6 +101,8 @@ const Admin = () => {
   const [editingCertification, setEditingCertification] = useState<Certification | null>(null);
   const [showAnnouncementForm, setShowAnnouncementForm] = useState(false);
   const [editingAnnouncement, setEditingAnnouncement] = useState<Announcement | null>(null);
+  const [showAdvertisementForm, setShowAdvertisementForm] = useState(false);
+  const [editingAdvertisement, setEditingAdvertisement] = useState<Advertisement | null>(null);
   const [profileFormData, setProfileFormData] = useState({
     full_name: "",
     bio: "",
@@ -127,6 +144,7 @@ const Admin = () => {
       fetchMessages();
       fetchCertifications();
       fetchAnnouncements();
+      fetchAdvertisements();
       setProfileFormData({
         full_name: profile.full_name || "",
         bio: profile.bio || "",
@@ -226,6 +244,24 @@ const Admin = () => {
 
       if (error) throw error;
       setAnnouncements(data || []);
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
+  };
+
+  const fetchAdvertisements = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('advertisements')
+        .select('*')
+        .order('display_order', { ascending: true });
+
+      if (error) throw error;
+      setAdvertisements(data || []);
     } catch (error: any) {
       toast({
         title: "Error",
@@ -404,6 +440,51 @@ const Admin = () => {
     handleAnnouncementFormClose();
   };
 
+  const handleDeleteAdvertisement = async (id: string) => {
+    if (!confirm("Are you sure you want to delete this advertisement?")) return;
+
+    try {
+      const { error } = await supabase
+        .from("advertisements")
+        .delete()
+        .eq("id", id);
+
+      if (error) throw error;
+
+      setAdvertisements(advertisements.filter((a) => a.id !== id));
+      toast({
+        title: "Success",
+        description: "Advertisement deleted successfully",
+      });
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleEditAdvertisement = (advertisement: Advertisement) => {
+    setEditingAdvertisement(advertisement);
+    setShowAdvertisementForm(true);
+  };
+
+  const handleAddAdvertisement = () => {
+    setEditingAdvertisement(null);
+    setShowAdvertisementForm(true);
+  };
+
+  const handleAdvertisementFormClose = () => {
+    setShowAdvertisementForm(false);
+    setEditingAdvertisement(null);
+  };
+
+  const handleAdvertisementSave = () => {
+    fetchAdvertisements();
+    handleAdvertisementFormClose();
+  };
+
   const handleProfileUpdate = async () => {
     if (!user) return;
 
@@ -483,6 +564,7 @@ const Admin = () => {
             <TabsTrigger value="projects">Projects</TabsTrigger>
             <TabsTrigger value="certifications">Certifications</TabsTrigger>
             <TabsTrigger value="announcements">Announcements</TabsTrigger>
+            <TabsTrigger value="advertisements">Advertisements</TabsTrigger>
             <TabsTrigger value="messages">Messages</TabsTrigger>
             <TabsTrigger value="profile">Profile</TabsTrigger>
           </TabsList>
@@ -574,6 +656,81 @@ const Admin = () => {
                             variant="destructive"
                             size="sm"
                             onClick={() => handleDeleteAnnouncement(announcement.id)}
+                          >
+                            Delete
+                          </Button>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </TabsContent>
+
+            <TabsContent value="advertisements" className="space-y-4">
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-xl font-semibold text-foreground">Manage Advertisements</h2>
+                <Button onClick={handleAddAdvertisement}>
+                  <Plus size={16} className="mr-2" />
+                  Create Advertisement
+                </Button>
+              </div>
+
+              {showAdvertisementForm && (
+                <AdvertisementForm
+                  advertisement={editingAdvertisement || undefined}
+                  onSuccess={handleAdvertisementSave}
+                  onCancel={handleAdvertisementFormClose}
+                />
+              )}
+
+              <div className="grid gap-4">
+                {advertisements.map((advertisement) => (
+                  <Card key={advertisement.id}>
+                    <CardContent className="p-6">
+                      <div className="flex justify-between items-start">
+                        <div className="flex-1">
+                          {advertisement.image_url && (
+                            <img
+                              src={advertisement.image_url}
+                              alt={advertisement.title}
+                              className="w-full h-32 object-cover rounded-lg mb-3"
+                            />
+                          )}
+                          <h3 className="text-lg font-semibold text-foreground mb-2">
+                            {advertisement.title}
+                          </h3>
+                          <p className="text-muted-foreground mb-3">{advertisement.description}</p>
+                          {advertisement.link_url && (
+                            <a
+                              href={advertisement.link_url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-primary text-sm hover:underline"
+                            >
+                              {advertisement.link_url}
+                            </a>
+                          )}
+                          <div className="flex gap-2 mt-3">
+                            <Badge>{advertisement.placement}</Badge>
+                            <Badge variant={advertisement.is_active ? "default" : "secondary"}>
+                              {advertisement.is_active ? "Active" : "Inactive"}
+                            </Badge>
+                            <Badge variant="outline">Order: {advertisement.display_order}</Badge>
+                          </div>
+                        </div>
+                        <div className="flex gap-2">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => handleEditAdvertisement(advertisement)}
+                          >
+                            Edit
+                          </Button>
+                          <Button
+                            variant="destructive"
+                            size="sm"
+                            onClick={() => handleDeleteAdvertisement(advertisement.id)}
                           >
                             Delete
                           </Button>

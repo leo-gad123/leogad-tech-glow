@@ -11,6 +11,7 @@ import Footer from "@/components/Footer";
 import TechBackground from "@/components/TechBackground";
 import { VisitorCounter } from "@/components/VisitorCounter";
 import { Announcements } from "@/components/Announcements";
+import { Advertisements } from "@/components/Advertisements";
 
 const Index = () => {
   return (
@@ -20,6 +21,7 @@ const Index = () => {
       <main className="relative z-10">
         <Hero />
         <Announcements />
+        <Advertisements placement="banner" />
         <div className="fixed bottom-4 right-4 z-50">
           <VisitorCounter />
         </div>
