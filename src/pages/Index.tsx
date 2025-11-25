@@ -10,6 +10,7 @@ import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
 import TechBackground from "@/components/TechBackground";
 import { VisitorCounter } from "@/components/VisitorCounter";
+import { Announcements } from "@/components/Announcements";
 
 const Index = () => {
   return (
@@ -18,6 +19,7 @@ const Index = () => {
       <Header />
       <main className="relative z-10">
         <Hero />
+        <Announcements />
         <div className="fixed bottom-4 right-4 z-50">
           <VisitorCounter />
         </div>

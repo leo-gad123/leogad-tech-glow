@@ -15,6 +15,7 @@ import { Session, User } from '@supabase/supabase-js';
 import ProjectForm from "@/components/admin/ProjectForm";
 import ProfilePictureUpload from "@/components/admin/ProfilePictureUpload";
 import CertificationForm from "@/components/admin/CertificationForm";
+import { AnnouncementForm } from "@/components/admin/AnnouncementForm";
 
 interface Project {
   id: string;
@@ -50,6 +51,15 @@ interface Certification {
   created_at: string;
 }
 
+interface Announcement {
+  id: string;
+  title: string;
+  message: string;
+  type: string;
+  is_active: boolean;
+  created_at: string;
+}
+
 interface Profile {
   id: string;
   user_id: string;
@@ -67,12 +77,15 @@ const Admin = () => {
   const [projects, setProjects] = useState<Project[]>([]);
   const [messages, setMessages] = useState<Message[]>([]);
   const [certifications, setCertifications] = useState<Certification[]>([]);
+  const [announcements, setAnnouncements] = useState<Announcement[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("projects");
   const [showProjectForm, setShowProjectForm] = useState(false);
   const [editingProject, setEditingProject] = useState<Project | null>(null);
   const [showCertificationForm, setShowCertificationForm] = useState(false);
   const [editingCertification, setEditingCertification] = useState<Certification | null>(null);
+  const [showAnnouncementForm, setShowAnnouncementForm] = useState(false);
+  const [editingAnnouncement, setEditingAnnouncement] = useState<Announcement | null>(null);
   const [profileFormData, setProfileFormData] = useState({
     full_name: "",
     bio: "",
@@ -113,6 +126,7 @@ const Admin = () => {
       fetchProjects();
       fetchMessages();
       fetchCertifications();
+      fetchAnnouncements();
       setProfileFormData({
         full_name: profile.full_name || "",
         bio: profile.bio || "",
@@ -194,6 +208,24 @@ const Admin = () => {
 
       if (error) throw error;
       setCertifications(data || []);
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
+  };
+
+  const fetchAnnouncements = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('announcements')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      setAnnouncements(data || []);
     } catch (error: any) {
       toast({
         title: "Error",
@@ -327,6 +359,51 @@ const Admin = () => {
     handleCertificationFormClose();
   };
 
+  const handleDeleteAnnouncement = async (id: string) => {
+    if (!confirm("Are you sure you want to delete this announcement?")) return;
+
+    try {
+      const { error } = await supabase
+        .from("announcements")
+        .delete()
+        .eq("id", id);
+
+      if (error) throw error;
+
+      setAnnouncements(announcements.filter((a) => a.id !== id));
+      toast({
+        title: "Success",
+        description: "Announcement deleted successfully",
+      });
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleEditAnnouncement = (announcement: Announcement) => {
+    setEditingAnnouncement(announcement);
+    setShowAnnouncementForm(true);
+  };
+
+  const handleAddAnnouncement = () => {
+    setEditingAnnouncement(null);
+    setShowAnnouncementForm(true);
+  };
+
+  const handleAnnouncementFormClose = () => {
+    setShowAnnouncementForm(false);
+    setEditingAnnouncement(null);
+  };
+
+  const handleAnnouncementSave = () => {
+    fetchAnnouncements();
+    handleAnnouncementFormClose();
+  };
+
   const handleProfileUpdate = async () => {
     if (!user) return;
 
@@ -405,6 +482,7 @@ const Admin = () => {
           <TabsList className="mb-8">
             <TabsTrigger value="projects">Projects</TabsTrigger>
             <TabsTrigger value="certifications">Certifications</TabsTrigger>
+            <TabsTrigger value="announcements">Announcements</TabsTrigger>
             <TabsTrigger value="messages">Messages</TabsTrigger>
             <TabsTrigger value="profile">Profile</TabsTrigger>
           </TabsList>
@@ -449,7 +527,65 @@ const Admin = () => {
             </div>
           </TabsContent>
 
-          <TabsContent value="messages" className="space-y-4">
+            <TabsContent value="announcements" className="space-y-4">
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-xl font-semibold text-foreground">Manage Announcements</h2>
+                <Button onClick={handleAddAnnouncement}>
+                  Create Announcement
+                </Button>
+              </div>
+
+              {showAnnouncementForm && (
+                <AnnouncementForm
+                  announcement={editingAnnouncement || undefined}
+                  onSuccess={handleAnnouncementSave}
+                  onCancel={handleAnnouncementFormClose}
+                />
+              )}
+
+              <div className="grid gap-4">
+                {announcements.map((announcement) => (
+                  <Card key={announcement.id}>
+                    <CardContent className="p-6">
+                      <div className="flex justify-between items-start">
+                        <div className="flex-1">
+                          <h3 className="text-lg font-semibold text-foreground mb-2">
+                            {announcement.title}
+                          </h3>
+                          <p className="text-muted-foreground mb-3">{announcement.message}</p>
+                          <div className="flex gap-2">
+                            <Badge variant={announcement.type === "error" ? "destructive" : "default"}>
+                              {announcement.type}
+                            </Badge>
+                            <Badge variant={announcement.is_active ? "default" : "secondary"}>
+                              {announcement.is_active ? "Active" : "Inactive"}
+                            </Badge>
+                          </div>
+                        </div>
+                        <div className="flex gap-2">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => handleEditAnnouncement(announcement)}
+                          >
+                            Edit
+                          </Button>
+                          <Button
+                            variant="destructive"
+                            size="sm"
+                            onClick={() => handleDeleteAnnouncement(announcement.id)}
+                          >
+                            Delete
+                          </Button>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </TabsContent>
+
+            <TabsContent value="messages" className="space-y-4">
             <h2 className="text-xl font-semibold text-foreground mb-6">Contact Messages</h2>
             <div className="grid gap-4">
               {messages.map((message) => (
