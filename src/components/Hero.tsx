@@ -57,9 +57,9 @@ const Hero = () => {
             </Avatar>
           </div>
           
-          {/* Main Heading with Gradient Animation */}
+          {/* Main Heading with Typewriter Animation */}
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-heading font-bold mb-6 fade-in">
-            <span className="text-gradient-cyber animate-scale-in">Hakizimana Leogad</span>
+            <span className="text-gradient-cyber typewriter">Hakizimana Leogad</span>
           </h1>
           
           {/* Subtitle with Glow */}
