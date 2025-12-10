@@ -4,8 +4,15 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
+const roles = [
+  "Embedded & IoT System Developer",
+  "Artificial Intelligence",
+  "Machine Learning Model Developer"
+];
+
 const Hero = () => {
   const [adminAvatarUrl, setAdminAvatarUrl] = useState<string | null>(null);
+  const [currentRoleIndex, setCurrentRoleIndex] = useState(0);
 
   useEffect(() => {
     const fetchAdminProfile = async () => {
@@ -21,6 +28,13 @@ const Hero = () => {
     };
 
     fetchAdminProfile();
+  }, []);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentRoleIndex((prev) => (prev + 1) % roles.length);
+    }, 4000);
+    return () => clearInterval(interval);
   }, []);
   const scrollToSection = (href: string) => {
     const element = document.querySelector(href);
@@ -62,9 +76,9 @@ const Hero = () => {
             <span className="text-gradient-cyber typewriter">Hakizimana Leogad</span>
           </h1>
           
-          {/* Subtitle with Glow */}
-          <p className="text-xl md:text-2xl lg:text-3xl text-primary font-semibold mb-4 fade-in-delay-1 drop-shadow-[0_0_10px_rgba(0,198,255,0.5)]">
-            Embedded & IoT System Developer
+          {/* Subtitle with Typewriter Cycling */}
+          <p className="text-xl md:text-2xl lg:text-3xl text-primary font-semibold mb-4 fade-in-delay-1 drop-shadow-[0_0_10px_rgba(0,198,255,0.5)] h-10 md:h-12">
+            <span key={currentRoleIndex} className="typewriter-role">{roles[currentRoleIndex]}</span>
           </p>
 
           {/* Description */}

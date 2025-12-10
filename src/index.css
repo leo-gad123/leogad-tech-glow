@@ -354,7 +354,7 @@
     100% { transform: translateY(100%); }
   }
   
-  /* Typewriter Effect */
+  /* Typewriter Effect for Name */
   .typewriter {
     display: inline-block;
     overflow: hidden;
@@ -373,5 +373,21 @@
   
   @keyframes blink {
     50% { border-color: transparent; }
+  }
+  
+  /* Typewriter Effect for Roles */
+  .typewriter-role {
+    display: inline-block;
+    overflow: hidden;
+    border-right: 2px solid hsl(var(--neon-cyan));
+    white-space: nowrap;
+    animation: 
+      typingRole 3.5s steps(35) forwards,
+      blink 0.7s step-end infinite;
+  }
+  
+  @keyframes typingRole {
+    0% { width: 0; }
+    20%, 100% { width: 100%; }
   }
 }
