@@ -361,14 +361,14 @@
     border-right: 3px solid hsl(var(--neon-cyan));
     white-space: nowrap;
     animation: 
-      typing 2s steps(17) infinite,
+      typing 4s steps(17) infinite,
       blink 0.7s step-end infinite;
   }
   
   @keyframes typing {
-    0%, 10% { width: 0; }
-    50%, 60% { width: 100%; }
-    90%, 100% { width: 0; }
+    0%, 5% { width: 0; }
+    30%, 70% { width: 100%; }
+    95%, 100% { width: 0; }
   }
   
   @keyframes blink {
