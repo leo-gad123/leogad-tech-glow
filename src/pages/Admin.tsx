@@ -8,7 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { LogOut, Plus, Pencil, Trash2, Mail, User as UserIcon, Award } from "lucide-react";
+import { LogOut, Plus, Pencil, Trash2, Mail, User as UserIcon, Award, Image } from "lucide-react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { Badge } from "@/components/ui/badge";
 import { Session, User } from '@supabase/supabase-js';
@@ -17,6 +17,7 @@ import ProfilePictureUpload from "@/components/admin/ProfilePictureUpload";
 import CertificationForm from "@/components/admin/CertificationForm";
 import { AnnouncementForm } from "@/components/admin/AnnouncementForm";
 import { AdvertisementForm } from "@/components/admin/AdvertisementForm";
+import { PostForm } from "@/components/admin/PostForm";
 
 interface Project {
   id: string;
@@ -74,6 +75,15 @@ interface Advertisement {
   created_at: string;
 }
 
+interface Post {
+  id: string;
+  title: string;
+  description?: string;
+  image_url: string;
+  is_active: boolean;
+  created_at: string;
+}
+
 interface Profile {
   id: string;
   user_id: string;
@@ -93,6 +103,7 @@ const Admin = () => {
   const [certifications, setCertifications] = useState<Certification[]>([]);
   const [announcements, setAnnouncements] = useState<Announcement[]>([]);
   const [advertisements, setAdvertisements] = useState<Advertisement[]>([]);
+  const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("projects");
   const [showProjectForm, setShowProjectForm] = useState(false);
@@ -103,6 +114,8 @@ const Admin = () => {
   const [editingAnnouncement, setEditingAnnouncement] = useState<Announcement | null>(null);
   const [showAdvertisementForm, setShowAdvertisementForm] = useState(false);
   const [editingAdvertisement, setEditingAdvertisement] = useState<Advertisement | null>(null);
+  const [showPostForm, setShowPostForm] = useState(false);
+  const [editingPost, setEditingPost] = useState<Post | null>(null);
   const [profileFormData, setProfileFormData] = useState({
     full_name: "",
     bio: "",
@@ -145,6 +158,7 @@ const Admin = () => {
       fetchCertifications();
       fetchAnnouncements();
       fetchAdvertisements();
+      fetchPosts();
       setProfileFormData({
         full_name: profile.full_name || "",
         bio: profile.bio || "",
@@ -244,6 +258,24 @@ const Admin = () => {
 
       if (error) throw error;
       setAnnouncements(data || []);
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
+  };
+
+  const fetchPosts = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('posts')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      setPosts(data || []);
     } catch (error: any) {
       toast({
         title: "Error",
@@ -465,6 +497,51 @@ const Admin = () => {
     }
   };
 
+  const handleDeletePost = async (id: string) => {
+    if (!confirm("Are you sure you want to delete this post?")) return;
+
+    try {
+      const { error } = await supabase
+        .from("posts")
+        .delete()
+        .eq("id", id);
+
+      if (error) throw error;
+
+      setPosts(posts.filter((p) => p.id !== id));
+      toast({
+        title: "Success",
+        description: "Post deleted successfully",
+      });
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleEditPost = (post: Post) => {
+    setEditingPost(post);
+    setShowPostForm(true);
+  };
+
+  const handleAddPost = () => {
+    setEditingPost(null);
+    setShowPostForm(true);
+  };
+
+  const handlePostFormClose = () => {
+    setShowPostForm(false);
+    setEditingPost(null);
+  };
+
+  const handlePostSave = () => {
+    fetchPosts();
+    handlePostFormClose();
+  };
+
   const handleEditAdvertisement = (advertisement: Advertisement) => {
     setEditingAdvertisement(advertisement);
     setShowAdvertisementForm(true);
@@ -560,8 +637,9 @@ const Admin = () => {
 
       <main className="container mx-auto px-4 py-8">
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="mb-8">
+          <TabsList className="mb-8 flex-wrap">
             <TabsTrigger value="projects">Projects</TabsTrigger>
+            <TabsTrigger value="posts">Posts</TabsTrigger>
             <TabsTrigger value="certifications">Certifications</TabsTrigger>
             <TabsTrigger value="announcements">Announcements</TabsTrigger>
             <TabsTrigger value="advertisements">Advertisements</TabsTrigger>
@@ -602,6 +680,69 @@ const Admin = () => {
                       {project.technologies.map((tech) => (
                         <Badge key={tech} variant="secondary">{tech}</Badge>
                       ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </TabsContent>
+
+          <TabsContent value="posts" className="space-y-4">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-xl font-semibold text-foreground">Manage Posts</h2>
+              <Button onClick={handleAddPost}>
+                <Image size={16} className="mr-2" />
+                Create Post
+              </Button>
+            </div>
+
+            {showPostForm && (
+              <PostForm
+                post={editingPost || undefined}
+                onSuccess={handlePostSave}
+                onCancel={handlePostFormClose}
+              />
+            )}
+
+            <div className="grid gap-4">
+              {posts.map((post) => (
+                <Card key={post.id}>
+                  <CardContent className="p-6">
+                    <div className="flex justify-between items-start gap-4">
+                      {post.image_url && (
+                        <img
+                          src={post.image_url}
+                          alt={post.title}
+                          className="w-32 h-24 object-cover rounded-lg"
+                        />
+                      )}
+                      <div className="flex-1">
+                        <h3 className="text-lg font-semibold text-foreground mb-2">
+                          {post.title}
+                        </h3>
+                        {post.description && (
+                          <p className="text-muted-foreground mb-3">{post.description}</p>
+                        )}
+                        <Badge variant={post.is_active ? "default" : "secondary"}>
+                          {post.is_active ? "Active" : "Inactive"}
+                        </Badge>
+                      </div>
+                      <div className="flex gap-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleEditPost(post)}
+                        >
+                          <Pencil size={16} />
+                        </Button>
+                        <Button
+                          variant="destructive"
+                          size="sm"
+                          onClick={() => handleDeletePost(post.id)}
+                        >
+                          <Trash2 size={16} />
+                        </Button>
+                      </div>
                     </div>
                   </CardContent>
                 </Card>

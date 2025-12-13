@@ -12,6 +12,7 @@ import TechBackground from "@/components/TechBackground";
 import { VisitorCounter } from "@/components/VisitorCounter";
 import { Announcements } from "@/components/Announcements";
 import { Advertisements } from "@/components/Advertisements";
+import { Posts } from "@/components/Posts";
 
 const Index = () => {
   return (
@@ -26,6 +27,7 @@ const Index = () => {
           <VisitorCounter />
         </div>
         <About />
+        <Posts />
         <Projects />
         <Skills />
         <Services />
